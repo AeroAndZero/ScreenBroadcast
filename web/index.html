@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="expires" content="-1" />
+    <title>Get image blob</title>
+    <style>
+        img{
+            width: 98vw;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1> Live from server </h1>
+    <div id="imgRenderer">
+        <img id="change">
+    </div>
+
+    <!--img.src = "data:image/jpeg;base64," + frames[currentFrame];-->
+    
+    <script>
+        var imgRenderer = document.getElementById("imgRenderer");
+        var img = document.getElementById("change");
+        
+        var frames = [];
+        var fps = 0;
+        var currentFrame = 0;
+        
+        function getImage(){
+            console.log("Get image called")
+            fetch("http://192.168.1.6:8080/ScreenBroadcast/view?").then(response => {return response.json()}).then(data => {
+                if(data == null){
+                    setTimeout(getImage,1000);
+                }else{
+                    getImage()
+                }
+                
+                frames = data.content;
+                fps = data.content.length;
+                
+                console.log(frames,fps);
+                
+                renderImages();
+            })
+        }
+        
+        function renderImages(){
+            let imgStr = "data:image/jpeg;base64," + frames[currentFrame]
+            img.src = imgStr
+            
+            currentFrame++;
+            console.log(currentFrame)
+            
+            if(currentFrame >= fps){
+                currentFrame = 0;
+                getImage()
+            }else{
+                setTimeout(renderImages,1000/fps);
+            }
+            
+        }
+        
+        getImage()
+        
+    </script>
+</body>
+</html>
