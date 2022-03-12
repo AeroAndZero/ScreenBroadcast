@@ -6,8 +6,8 @@
     <title>Get image blob</title>
     <style>
         img{
-            width: 98vw;
-            height: auto;
+            width: auto;
+            height: 98vh;
         }
     </style>
 </head>
@@ -29,7 +29,7 @@
         
         function getImage(){
             console.log("Get image called")
-            fetch("http://192.168.1.6:8080/ScreenBroadcast/view?").then(response => {return response.json()}).then(data => {
+            fetch("http://" + location.host + "/ScreenBroadcast/view?").then(response => {return response.json()}).then(data => {
                 if(data == null){
                     setTimeout(getImage,1000);
                 }else{
